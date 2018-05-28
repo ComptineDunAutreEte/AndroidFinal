@@ -42,11 +42,19 @@ public final class DecodeMessage {
             @Override
             public void run() {
                 String[] lines = msg.split(":");
-                decode(lines, number);
-                Intent in = new Intent();
-                in.setAction("UPDATE_ACTION");
-                in.putExtra("number", number);
-                context.sendBroadcast(in);
+                if(lines[0].equals("5")){
+                    Intent in = new Intent();
+                    in.setAction("LOCATION_ACTION");
+                    in.putExtra("location", lines[1]);
+                    context.sendBroadcast(in);
+                }else{
+                    decode(lines, number);
+                    Intent in = new Intent();
+                    in.setAction("UPDATE_ACTION");
+                    in.putExtra("number", number);
+                    context.sendBroadcast(in);
+                }
+
 
             }
         });
@@ -163,12 +171,7 @@ public final class DecodeMessage {
     }
 
     public static void updateMsgInfo(final MsgInfo m) {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                database.getMsgInfoDAO().update(m);
-            }
-        });
+        database.getMsgInfoDAO().update(m);
 
     }
 

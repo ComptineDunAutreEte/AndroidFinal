@@ -62,6 +62,12 @@
             android:text="@string/send_sms" />
 
         <Button
+            android:id="@+id/sendLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Send Location" />
+
+        <Button
             android:id="@+id/mapButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

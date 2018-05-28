@@ -38,16 +38,23 @@ public class ImplicitIntentActivity extends AppCompatActivity {
 
     private static final String TAG = "ImplicitIntent";
     private ConversationDataBase database;
-    private MyBroadcastReceiver broadcast;
 
     private BroadcastReceiver br = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            MsgInfo m = new MsgInfo();
             String mm = intent.getExtras().getString("message");
             String number = intent.getExtras().getString("number");
             DecodeMessage.decode(mm, number, getApplication());
+        }
+    };
+
+    private BroadcastReceiver location = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String location = intent.getExtras().getString("location");
+            showMap(location);
         }
     };
 
@@ -55,12 +62,14 @@ public class ImplicitIntentActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         this.registerReceiver(br, new IntentFilter("SMS_RECEIVED_ACTION"));
+        this.registerReceiver(location, new IntentFilter("LOCATION_ACTION"));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         this.unregisterReceiver(br);
+        this.unregisterReceiver(location);
     }
 
     @Override
@@ -79,14 +88,14 @@ public class ImplicitIntentActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         //database = ConversationDataBase.getDatabase(this.getApplication());
-        final EditText addrText = (EditText) findViewById(R.id.location);
-        final Button mapButton = (Button) findViewById(R.id.mapButton);
+        final EditText addrText = findViewById(R.id.location);
+        final Button mapButton = findViewById(R.id.mapButton);
 
         mapButton.setOnClickListener(new Button.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                try {
+                /*try {
                     String address = addrText.getText().toString();
                     address = address.replace(' ', '+');
                     Intent geoIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + address));
@@ -96,7 +105,8 @@ public class ImplicitIntentActivity extends AppCompatActivity {
                     }
                 } catch (Exception e) {
                     Log.e(TAG, e.toString());
-                }
+                }*/
+                showMap(addrText.getText().toString());
             }
         });
 
@@ -136,6 +146,29 @@ public class ImplicitIntentActivity extends AppCompatActivity {
             }
         });
 
+        final Button sendLocationButton = findViewById(R.id.sendLocation);
+        sendLocationButton.setOnClickListener(new Button.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                sendLocation();
+            }
+        });
+
+    }
+
+    private void showMap(String address){
+        try {
+            //String address = addrText.getText().toString();
+            address = address.replace(' ', '+');
+            Intent geoIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + address));
+
+            if (geoIntent.resolveActivity(getPackageManager()) != null) {
+                startActivity(geoIntent);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
     }
 
     private void launchReadSmsActivity() {
@@ -152,6 +185,18 @@ public class ImplicitIntentActivity extends AppCompatActivity {
                     REQUEST_SEND_SMS);
         } else {
             pickContact();
+        }
+    }
+
+    private void sendLocation(){
+        if ((ContextCompat.checkSelfPermission(ImplicitIntentActivity.this, SEND_SMS) != PERMISSION_GRANTED)) {
+            ActivityCompat.requestPermissions(ImplicitIntentActivity.this,
+                    new String[]{SEND_SMS},
+                    BROADCAST);
+        } else {
+            final EditText addrText = findViewById(R.id.location);
+            final EditText numberField =  findViewById(R.id.numeroField);
+            sendSMS("5:"+addrText.getText().toString(), numberField.getText().toString());
         }
     }
 
