@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/statusLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Status:"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/messageLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Message:"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/keyLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Clé: "
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/arBut"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/keyBut"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/readBut"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lire" />
+</LinearLayout>
