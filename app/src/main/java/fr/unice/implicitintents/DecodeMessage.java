@@ -25,7 +25,7 @@ public final class DecodeMessage {
     public static void init(ConversationDataBase db) {
         database = db;
         Random r = new Random();
-        cle = 2 + r.nextInt(128);
+        cle = Math.abs(2 + r.nextInt(10));
 
         AsyncTask.execute(new Runnable() {
             @Override
@@ -38,6 +38,7 @@ public final class DecodeMessage {
     }
 
     public static void decode(final String msg, final String number, final Context context) {
+        System.out.println("LAAAAAAAAAAAAAAA"+msg);
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
